@@ -4,6 +4,7 @@ import math
 
 
 MAX_VAL = 32
+MAX_VAL_LIMIT = MAX_VAL + 1
 STEP = 1
 HALF_MAX_VAL = MAX_VAL / 2
 MAX_RADIUS = math.sqrt(HALF_MAX_VAL**2 + HALF_MAX_VAL**2)
@@ -21,10 +22,10 @@ def map(x, y):
         return {'x': 0, 'y': 0}
 
     angle = 0
-    if y_off == 0:
-        angle = 0 if x > 0 else math.pi
+    if x_off == 0:
+        angle = math.pi / 2 if y > 0 else math.pi / 2 * 3
     else:
-        angle = math.atan(x_off / y_off)
+        angle = math.atan(y_off / x_off)
     if (x_off < 0):
         angle += math.pi
     elif (x_off > 0 and y_off < 0):
@@ -39,7 +40,7 @@ def unmap(x, y):
     angle = y / MAX_VAL * 2 * math.pi
     x_dir = math.cos(angle)
     y_dir = math.sin(angle)
-    radius = x
+    radius = x / MAX_VAL * MAX_RADIUS
     ret_x = X_OFFSET + x_dir * radius
     ret_y = Y_OFFSET + y_dir * radius
     return {'x': ret_x, 'y': ret_y}
@@ -60,6 +61,14 @@ for i in range(0, len(x)):
     x[i] = mapped['x']
     y[i] = mapped['y']
 
+
+plt.scatter(x, y, c=colors, cmap='rainbow')
+plt.show()
+
+for i in range(0, len(x)):
+    unmapped = unmap(x[i], y[i])
+    x[i] = unmapped['x']
+    y[i] = unmapped['y']
 
 
 plt.scatter(x, y, c=colors, cmap='rainbow')
